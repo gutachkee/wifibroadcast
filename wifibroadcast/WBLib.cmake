@@ -112,18 +112,9 @@ target_link_libraries(wifibroadcast PUBLIC ${sodium_LIBRARY_RELEASE})
 # for some reason, we also need to manually link pthread
 find_package(Threads REQUIRED)
 target_link_libraries(wifibroadcast PUBLIC Threads::Threads)
-# spdlog might be already exist as a target in OpenHD - only use package manager's spdlog if needed
-if(WB_USE_SPDLOG_EXTERNALLY)
-    message(STATUS "spdlog needs to be already provided by top cmake")
-    # LOL- In openhd we build spdlog into OHDCommonLib and get it from there
-    # There were some weird issues with using their cmake and buildroot
-    target_link_libraries(wifibroadcast PRIVATE OHDCommonLib)
-else ()
-    message(STATUS "Using spdlog from package manager")
-    find_package(spdlog REQUIRED)
-    target_link_libraries(wifibroadcast PRIVATE spdlog::spdlog)
-endif ()
 
+find_package(spdlog REQUIRED)
+target_link_libraries(wifibroadcast PRIVATE spdlog::spdlog)
 
 SET(WB_TARGET_LINK_LIBRARIES wifibroadcast)
 SET(WB_INCLUDE_DIRECTORES ${CMAKE_CURRENT_LIST_DIR}/wifibroadcast)
