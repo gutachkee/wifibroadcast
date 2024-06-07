@@ -52,6 +52,7 @@ target_sources(wifibroadcast PRIVATE
 
 target_include_directories(wifibroadcast PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/src/HelperSources
+        ${CMAKE_CURRENT_LIST_DIR}/src/
 )
 
 ## FEC Optimizations begin ---------------------------------
