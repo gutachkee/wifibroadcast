@@ -9,6 +9,7 @@
 #include <pcap/pcap.h>
 #include <sys/socket.h>
 
+#include <stdexcept>
 #include <string>
 
 namespace wifibroadcast::pcap_helper {
@@ -75,6 +76,7 @@ static pcap_t *open_pcap_rx(const std::string &wlan) {
   if (pcap_activate(ppcap) != 0) {
     wifibroadcast::log::get_default()->error("pcap_activate failed: {}",
                                              pcap_geterr(ppcap));
+    throw std::runtime_error("pcap_activate failed");
   }
   if (pcap_setnonblock(ppcap, 1, errbuf) != 0) {
     wifibroadcast::log::get_default()->error("set_nonblock failed: {}", errbuf);
