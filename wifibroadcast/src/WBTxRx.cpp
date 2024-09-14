@@ -268,7 +268,7 @@ bool WBTxRx::inject_radiotap_packet(int card_index, const uint8_t* packet_buff,
     }
     m_tx_stats.count_tx_dropped_packets++;
     if (has_fatal_error) {
-      if (m_fatal_error_cb != nullptr) {
+      if (m_fatal_error_cb) {
         m_fatal_error_cb(errno);
       }
     }
@@ -279,6 +279,10 @@ bool WBTxRx::inject_radiotap_packet(int card_index, const uint8_t* packet_buff,
 
 void WBTxRx::rx_register_callback(WBTxRx::OUTPUT_DATA_CALLBACK cb) {
   m_output_cb = std::move(cb);
+}
+
+void WBTxRx::register_fatal_error_callback(const DEVICE_FATAL_ERROR_CALLBACK& cb) {
+  m_fatal_error_cb = cb;
 }
 
 void WBTxRx::rx_register_stream_handler(
@@ -336,6 +340,7 @@ void WBTxRx::loop_receive_packets() {
           // we should only get errors here if the card is disconnected
           m_n_receiver_errors++;
           m_card_is_disconnected[i] = true;
+          if (m_fatal_error_cb) m_fatal_error_cb(ENXIO);
           // limit logging here
           const auto elapsed =
               std::chrono::steady_clock::now() - m_last_receiver_error_log;

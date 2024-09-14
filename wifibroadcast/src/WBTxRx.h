@@ -186,6 +186,8 @@ class WBTxRx {
   // disconneccted
   typedef std::function<void(int error)> DEVICE_FATAL_ERROR_CALLBACK;
   DEVICE_FATAL_ERROR_CALLBACK m_fatal_error_cb = nullptr;
+
+  void register_fatal_error_callback(const DEVICE_FATAL_ERROR_CALLBACK& cb);
   /**
    * Receiving packets happens in the background in another thread.
    */
